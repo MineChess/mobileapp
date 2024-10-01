@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chess Game Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #login-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px; /* Set a fixed width for better appearance */
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-form">
+        <h2>Login to Chess Game</h2>
+        <input id="token-input" type="text" placeholder="Enter WS Token" required>
+        <input id="url-input" type="text" placeholder="Enter WS URL (e.g. localhost:5000)" required>
+        <button id="login-btn">Login</button>
+        <p class="error" id="error-msg"></p>
+    </div>
+
+    <script>
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const tokenInput = document.getElementById('token-input').value.trim();
+            const urlInput = document.getElementById('url-input').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+
+            if (tokenInput && urlInput) {
+                // Save token and URL to local storage
+                localStorage.setItem('ws_token', tokenInput);
+                localStorage.setItem('ws_url', urlInput);
+                // Redirect to chess game page
+                window.location.href = 'chess.html'; // Adjust the path as needed
+            } else {
+                errorMsg.innerText = 'Please enter both a valid token and URL.';
+            }
+        });
+    </script>
+</body>
+</html>
