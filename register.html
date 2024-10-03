@@ -4,26 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chess Game Login</title>
+    <title>WebSocket Chess Game register</title>
     <link rel="stylesheet" href="style.css">
     </style>
 </head>
 
 <body>
     <div id="login-form">
-        <h2>Login to Chess Game</h2>
+        <h2>Register to Chess Game</h2>
         <input id="user-input" type="text" placeholder="Enter username" required>
         <input id="pass-input" type="text" placeholder="Enter password" required>
-        <button id="login-btn">Login</button>
+        <button id="register-btn">Register</button>
         <p class="error" id="error-msg"></p>
-        <a href="register.html">No account? Register here!</a>
     </div>
 
     <script>
         let PROD_URL
-        const API_URL = PROD_URL || 'http://localhost:3000/users/login/'
+        const API_URL = PROD_URL || 'http://localhost:3000/users/' 
 
-        async function logIn(user, pass) {
+        async function registerUser(user, pass) {
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -34,7 +33,6 @@
                 })
 
                 responseData = await response.json()
-                localStorage.setItem('chessjwt', responseData.jwt)
                 console.log(responseData)
             } catch (error) {
                 console.log('Error:', error)
@@ -42,7 +40,7 @@
             }
         }
 
-        document.getElementById('login-btn').addEventListener('click', () => {
+        document.getElementById('register-btn').addEventListener('click', () => {
             const userInput = document.getElementById('user-input').value.trim();
             const passInput = document.getElementById('pass-input').value.trim();
             const errorMsg = document.getElementById('error-msg');
@@ -52,9 +50,9 @@
                 return;
             }
 
-            if(logIn(userInput, passInput)) {
-                errorMsg.innerHTML = 'User logged in successfully';
-                setTimeout(window.location.href = 'chess.html', 5000);
+            if(registerUser(userInput, passInput)) {
+                errorMsg.innerHTML = 'User registered successfully';
+                setTimeout(window.location.href = 'index.html', 5000);;
             }
         });
     </script>
