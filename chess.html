@@ -21,12 +21,10 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
-        const urlToken = getUrlParameter('token');
-
-        if (urlToken) {
-            localStorage.setItem('jwt', urlToken);
+        if (!localStorage.getItem('jwt')) {
+            window.location.href = 'index.html';
         }
-        const jwt = localStorage.getItem('jwt');
+
         let WS_URL = localStorage.getItem('ws_url') || 'localhost:5000'; // Default URL
         let socket;
         let selectedSquare = null;

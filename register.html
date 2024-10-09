@@ -34,29 +34,39 @@
                     body: JSON.stringify({ username: user, password: pass })
                 })
 
-                responseData = await response.json()
-                console.log(responseData)
+                const responseData = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(responseData.msg || 'Registration failed')
+                }
+
+                console.log(responseData) //Dev
+                return true
+
             } catch (error) {
-                console.log('Error:', error)
+                console.log('Error:', error.message)
+                errorMsg.innerHTML = error.message
                 return false
             }
         }
 
-        document.getElementById('register-btn').addEventListener('click', () => {
-            const userInput = document.getElementById('user-input').value.trim();
-            const passInput = document.getElementById('pass-input').value.trim();
-            const errorMsg = document.getElementById('error-msg');
+        document.getElementById('register-btn').addEventListener('click', async () => {
+            const userInput = document.getElementById('user-input').value.trim()
+            const passInput = document.getElementById('pass-input').value.trim()
+            const errorMsg = document.getElementById('error-msg')
 
             if (!userInput || !passInput) {
-                errorMsg.innerHTML = 'Please fill in all fields';
-                return;
+                errorMsg.innerHTML = 'Please fill in all fields'
+                return
             }
 
-            if (registerUser(userInput, passInput)) {
-                errorMsg.innerHTML = 'User registered successfully';
-                setTimeout(window.location.href = 'index.html', 5000);;
+            if (await registerUser(userInput, passInput)) {
+                errorMsg.innerHTML = 'User registered successfully'
+                setTimeout(() => {
+                    window.location.href = `index.html`
+                }, 2000)
             }
-        });
+        })
     </script>
 </body>
 
