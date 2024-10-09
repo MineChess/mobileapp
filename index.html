@@ -12,8 +12,10 @@
 <body>
     <div id="login-form">
         <h2>Login to Chess Game</h2>
-        <input id="user-input" type="text" placeholder="Enter username" required>
-        <input id="pass-input" type="text" placeholder="Enter password" required>
+        <div id="cont">
+            <input id="user-input" type="text" placeholder="Enter username" required>
+            <input id="pass-input" type="password" placeholder="Enter password" required>
+        </div>
         <button id="login-btn">Login</button>
         <p class="error" id="error-msg"></p>
         <a href="register.html">No account? Register here!</a>
@@ -33,16 +35,25 @@
                     body: JSON.stringify({ username: user, password: pass })
                 })
 
-                responseData = await response.json()
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.msg || 'Login failed');
+                }
+
+                const responseData = await response.json()
                 localStorage.setItem('chessjwt', responseData.jwt)
-                console.log(responseData)
+                console.log(responseData) //DEV
+                return responseData.jwt
+
             } catch (error) {
-                console.log('Error:', error)
+                console.log('Error:', error.message)
+                const errorMsg = document.getElementById('error-msg');
+                errorMsg.innerHTML = error.message;
                 return false
             }
         }
 
-        document.getElementById('login-btn').addEventListener('click', () => {
+        document.getElementById('login-btn').addEventListener('click', async () => {
             const userInput = document.getElementById('user-input').value.trim();
             const passInput = document.getElementById('pass-input').value.trim();
             const errorMsg = document.getElementById('error-msg');
@@ -52,9 +63,12 @@
                 return;
             }
 
-            if(logIn(userInput, passInput)) {
+            const jwtToken = await logIn(userInput, passInput);
+            if (jwtToken) {
                 errorMsg.innerHTML = 'User logged in successfully';
-                setTimeout(window.location.href = 'chess.html', 5000);
+                setTimeout(() => {
+                    window.location.href = `chess.html?token=${jwtToken}`;
+                }, 2000);
             }
         });
     </script>

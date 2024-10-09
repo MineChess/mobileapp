@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket Chess Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="board"></div>
     <div id="error-message"></div> <!-- Area for displaying error messages -->
 
     <script>
-        let WS_TOKEN = localStorage.getItem('ws_token') || ''; // Token for WS
+        //GPT:
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        const urlToken = getUrlParameter('token');
+
+        if (urlToken) {
+            localStorage.setItem('jwt', urlToken);
+        }
+        const jwt = localStorage.getItem('jwt');
         let WS_URL = localStorage.getItem('ws_url') || 'localhost:5000'; // Default URL
         let socket;
         let selectedSquare = null;
@@ -19,7 +34,7 @@
         // Function to connect to the WebSocket server
         function connectWebSocket() {
             // Create a WebSocket connection
-            socket = new WebSocket(`ws://${WS_URL}?token=${WS_TOKEN}`);
+            socket = new WebSocket(`ws://${WS_URL}?token=${jwt}`);
 
             socket.onopen = function () {
                 console.log('Connected to WebSocket server');
@@ -80,4 +95,5 @@
         connectWebSocket();
     </script>
 </body>
+
 </html>
