@@ -45,6 +45,7 @@
 
             } catch (error) {
                 console.log('Error:', error.message)
+                const errorMsg = document.getElementById('error-msg')
                 errorMsg.innerHTML = error.message
                 return false
             }
