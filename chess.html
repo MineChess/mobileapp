@@ -1,97 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chess Game</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div id="board"></div>
-    <div id="error-message"></div> <!-- Area for displaying error messages -->
+  <h1>MINECRAFT CHESS</h1>
+  <div id="game-status">Waiting for a second player...</div>
+  <div id="chessboard"></div>
 
-    <script>
-        //GPT:
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            const results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
-
-        if (!localStorage.getItem('jwt')) {
-            window.location.href = 'index.html';
-        }
-
-        let WS_URL = localStorage.getItem('ws_url') || 'localhost:5000'; // Default URL
-        let socket;
-        let selectedSquare = null;
-
-        // Function to connect to the WebSocket server
-        function connectWebSocket() {
-            // Create a WebSocket connection
-            socket = new WebSocket(`ws://${WS_URL}?token=${jwt}`);
-
-            socket.onopen = function () {
-                console.log('Connected to WebSocket server');
-            };
-
-            socket.onmessage = function (event) {
-                const data = JSON.parse(event.data);
-                console.log('Received message:', data);
-
-                if (data.type === 'gameState') {
-                    updateBoard(data.board);
-                } else if (data.status === 1) {
-                    document.querySelector('#error-message').innerText = data.msg;
-                }
-            };
-
-            socket.onclose = function () {
-                console.log('Connection closed');
-            };
-
-            socket.onerror = function (error) {
-                console.error('WebSocket error:', error);
-                document.querySelector('#error-message').innerText = 'WebSocket error occurred.';
-            };
-        }
-
-        // Function to update the chessboard UI
-        function updateBoard(board) {
-            const boardElement = document.getElementById('board');
-            boardElement.innerHTML = ''; // Clear previous board
-
-            board.forEach((row, rIdx) => {
-                row.forEach((cell, cIdx) => {
-                    const square = document.createElement('div');
-                    square.className = 'square ' + ((rIdx + cIdx) % 2 === 0 ? 'white' : 'black');
-                    square.dataset.row = rIdx;
-                    square.dataset.col = cIdx;
-                    square.innerText = cell ? cell : ''; // Show piece or empty
-                    square.onclick = () => handleSquareClick(rIdx, cIdx);
-                    boardElement.appendChild(square);
-                });
-            });
-        }
-
-        // Function to handle square clicks
-        function handleSquareClick(row, col) {
-            if (selectedSquare) {
-                const start = [selectedSquare.dataset.row, selectedSquare.dataset.col];
-                const end = [row, col];
-                socket.send(JSON.stringify({ type: 'move', start, end })); // Send move
-                selectedSquare = null; // Reset selection after move
-            } else {
-                selectedSquare = document.querySelector(`.square[data-row='${row}'][data-col='${col}']`);
-            }
-        }
-
-        // Initial connection
-        connectWebSocket();
-    </script>
+  <script src="./src/chess.js"></script>
 </body>
-
 </html>
