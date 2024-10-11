@@ -1,0 +1,33 @@
+name: Deploy Chess Game
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # Install dependencies if needed (e.g., if you're using npm or yarn)
+    # - name: Install dependencies
+    #   run: npm install
+
+    # Build your project if you need to compile files
+    # - name: Build the project
+    #   run: npm run build
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .  # or your build directory (e.g., ./dist)
+
+    # Optional: You can add a simple test step to ensure your files exist
+    - name: Verify index.html
+      run: ls -la
