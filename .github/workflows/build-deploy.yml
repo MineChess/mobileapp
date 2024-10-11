@@ -19,16 +19,14 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history (necessary if you want to retain commit history)
 
-    
-
-      # Step 4: Deploy to GitHub Pages
+      # Step 2: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .  # Use the directory containing your static files (e.g., `public`, `dist`, etc.)
+          publish_dir: .  # Use the root directory or specify the directory containing your static files
 
-      # Step 5: Verify deployment files (optional)
+      # Step 3: Verify deployment files (optional)
       - name: Verify index.html
-        run: ls -la   # Check if `index.html` exists in the `public` folder
+        run: ls -la  # Check if `index.html` exists in the root folder or specify the correct folder
