@@ -2,32 +2,40 @@ name: Deploy Chess Game
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main  # Set a branch name to trigger deployment
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  deploy:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-    # Install dependencies if needed (e.g., if you're using npm or yarn)
-    # - name: Install dependencies
-    #   run: npm install
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.110.0'
 
-    # Build your project if you need to compile files
-    # - name: Build the project
-    #   run: npm run build
+      - name: Build
+        run: hugo --minify
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: .  # or your build directory (e.g., ./dist)
-
-    # Optional: You can add a simple test step to ensure your files exist
-    - name: Verify index.html
-      run: ls -la
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        # If you're changing the branch from main,
+        # also change the `main` in `refs/heads/main`
+        # below accordingly.
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+       
+      - name: Verify index.html
+        run: ls -la
