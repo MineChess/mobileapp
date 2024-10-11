@@ -31,4 +31,4 @@ jobs:
 
       # Step 5: Verify deployment files (optional)
       - name: Verify index.html
-        run: ls -la ./public  # Check if `index.html` exists in the `public` folder
+        run: ls -la   # Check if `index.html` exists in the `public` folder
