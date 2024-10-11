@@ -21,11 +21,11 @@ jobs:
 
       # Step 2: Install dependencies (if any, like npm for JavaScript projects)
       - name: Install dependencies
-        run: npm install  # Only necessary if you have a `package.json` with dependencies
+          # Only necessary if you have a `package.json` with dependencies
 
       # Step 3: Build the project (if necessary)
       - name: Build the project
-        run: npm run build  # You can remove this if you don't need any build steps
+          # You can remove this if you don't need any build steps
 
       # Step 4: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
