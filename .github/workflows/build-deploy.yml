@@ -27,7 +27,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public  # Use the directory containing your static files (e.g., `public`, `dist`, etc.)
+          publish_dir: .  # Use the directory containing your static files (e.g., `public`, `dist`, etc.)
 
       # Step 5: Verify deployment files (optional)
       - name: Verify index.html
