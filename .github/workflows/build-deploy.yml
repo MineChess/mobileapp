@@ -31,6 +31,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        #Tests
+        # Check if index.html exists
+      - name: Check for index.html
+        run: |
+          if [ ! -f ./index.html ]; then
+            echo "index.html does not exist!"
+            exit 1  # Exit with an error code
+          else
+            echo "index.html exists."
+          fi
+          
+      - name: Check for chess.html
+        run: |
+          if [ ! -f ./chess.html ]; then
+            echo "chess.html does not exist!"
+            exit 1  # Exit with an error code
+          else
+            echo "chess.html exists."
+          fi
+          
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
