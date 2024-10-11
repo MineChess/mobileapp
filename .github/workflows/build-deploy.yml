@@ -3,7 +3,7 @@ name: Deploy Chess Game
 on:
   push:
     branches:
-      - main  # Set a branch name to trigger deployment
+      - main  # Set the branch name to trigger deployment
   pull_request:
 
 jobs:
@@ -14,28 +14,27 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
+      # Step 1: Check out the repository
       - uses: actions/checkout@v3
         with:
-          submodules: true  # Fetch Hugo themes (true OR recursive)
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          fetch-depth: 0  # Fetch all history (necessary if you want to retain commit history)
 
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          hugo-version: '0.110.0'
+      # Step 2: Install dependencies (if any, like npm for JavaScript projects)
+      - name: Install dependencies
+        run: npm install  # Only necessary if you have a `package.json` with dependencies
 
-      - name: Build
-        run: hugo --minify
+      # Step 3: Build the project (if necessary)
+      - name: Build the project
+        run: npm run build  # You can remove this if you don't need any build steps
 
-      - name: Deploy
+      # Step 4: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        # If you're changing the branch from main,
-        # also change the `main` in `refs/heads/main`
-        # below accordingly.
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-       
+          publish_dir: ./public  # Use the directory containing your static files (e.g., `public`, `dist`, etc.)
+
+      # Step 5: Verify deployment files (optional)
       - name: Verify index.html
-        run: ls -la
+        run: ls -la ./public  # Check if `index.html` exists in the `public` folder
