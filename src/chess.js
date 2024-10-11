@@ -6,7 +6,7 @@ const jwt = localStorage.getItem('jwt')
 
 let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
 
-const socket = new WebSocket(`ws://${WS_URL}?token=${jwt}`);
+const socket = new WebSocket(`wss://${WS_URL}?token=${jwt}`);
 
 socket.addEventListener('open', () => {
   console.log('Connected to WebSocket server');
