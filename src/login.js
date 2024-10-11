@@ -1,5 +1,5 @@
 let PROD_URL
-const API_URL = PROD_URL || 'http://localhost:3000/users/login/'
+const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/login/'
 
 async function logIn(user, pass) {
     try {

@@ -4,7 +4,7 @@ if (!localStorage.getItem('jwt')) {
 
 const jwt = localStorage.getItem('jwt')
 
-let WS_URL = localStorage.getItem('ws_url') || 'localhost:8080'; // Default URL
+let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
 
 const socket = new WebSocket(`ws://${WS_URL}?token=${jwt}`);
 
