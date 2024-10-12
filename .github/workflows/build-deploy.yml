@@ -31,8 +31,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        #Tests
-        # Check if index.html exists
+
+      # Install dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      # Run tests
+      - name: Run tests
+        run: npm test
+
+      # Check if index.html exists
       - name: Check for index.html
         run: |
           if [ ! -f ./index.html ]; then
@@ -41,7 +54,8 @@ jobs:
           else
             echo "index.html exists."
           fi
-          
+
+      # Check if chess.html exists
       - name: Check for chess.html
         run: |
           if [ ! -f ./chess.html ]; then
@@ -50,14 +64,16 @@ jobs:
           else
             echo "chess.html exists."
           fi
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
