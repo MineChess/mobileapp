@@ -79,7 +79,7 @@ const initialBoardSetup = [
 // Mapping pieces to images
 const pieceImages = {
   'r': 'img/black/cow_black.png',
-  'n': 'img/black/creeper_black.png',
+  'n': 'img/black/Creeper_black.png',
   'b': 'img/black/ghast_black.png',
   'q': 'img/black/mine_black.png',
   'k': 'img/black/steve_black.png',
