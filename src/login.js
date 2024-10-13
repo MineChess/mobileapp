@@ -1,6 +1,6 @@
 let PROD_URL
-const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/login/'
-
+//const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/login/'
+const API_URL = 'http://localhost:3000/users/login/'
 async function logIn(user, pass) {
     try {
         const response = await fetch(API_URL, {
@@ -43,7 +43,7 @@ document.getElementById('login-btn').addEventListener('click', async () => {
     if (jwtToken) {
         errorMsg.innerHTML = 'User logged in successfully'
         setTimeout(() => {
-            window.location.href = `chess.html?token=${jwtToken}`
+            window.location.href = `gameSelect.html`
         }, 2000)
     }
 })

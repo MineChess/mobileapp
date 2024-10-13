@@ -3,10 +3,13 @@ if (!localStorage.getItem('jwt')) {
 }
 
 const jwt = localStorage.getItem('jwt')
+const gameId = sessionStorage.getItem('gameId')
+const moves = sessionStorage.getItem('moves')
 
-let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
+//let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
+let WS_URL = 'localhost:5000'; // Default URL
 
-const socket = new WebSocket(`wss://${WS_URL}?token=${jwt}`);
+const socket = new WebSocket(`wss://${WS_URL}?token=${jwt}&gameId=${gameId}`);
 
 socket.addEventListener('open', () => {
   console.log('Connected to WebSocket server');
@@ -126,3 +129,54 @@ function handleDrop(e) {
     draggedPiece = null; // Reset dragged piece
   }
 }
+
+// Function to apply moves from session storage to the initial board setup
+function applyMovesFromStorage() {
+  if (!moves) return; // No moves to apply if the moves string is empty or null
+
+  // Split the moves string into an array of move strings
+  const movePairs = moves.split(', ');
+
+  // Apply each move to the initial board setup
+  movePairs.forEach(move => {
+      const [fromIndex, toIndex] = move.split(' ').map(Number); // Convert indices to numbers
+
+      // Move the piece in the board array
+      const piece = initialBoardSetup[fromIndex];
+      initialBoardSetup[toIndex] = piece;
+      initialBoardSetup[fromIndex] = ''; // Clear the original position
+  });
+
+  // Update the UI to reflect the board state
+  updateBoardUI();
+}
+
+// Function to update the chessboard UI based on the current board state
+function updateBoardUI() {
+  // Clear the current board UI
+  chessboard.innerHTML = '';
+
+  // Recreate the board with the updated setup
+  for (let i = 0; i < 64; i++) {
+      const square = document.createElement('div');
+      square.className = (Math.floor(i / 8) + i) % 2 === 0 ? 'white' : 'black';
+      square.dataset.index = i;
+      square.addEventListener('dragover', (e) => e.preventDefault());
+      square.addEventListener('drop', handleDrop);
+      
+      const pieceSymbol = initialBoardSetup[i];
+      if (pieceSymbol) {
+          const piece = document.createElement('img');
+          piece.src = pieceImages[pieceSymbol];
+          piece.draggable = true;
+          piece.dataset.index = i;
+          piece.addEventListener('dragstart', handleDragStart);
+          square.appendChild(piece);
+      }
+      
+      chessboard.appendChild(square);
+  }
+}
+
+// Call the function to apply moves after initial setup
+applyMovesFromStorage();
