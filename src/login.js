@@ -1,6 +1,6 @@
 let PROD_URL
-//const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/login/'
-const API_URL = 'http://localhost:3000/users/login/'
+const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/login/'
+//const API_URL = 'http://localhost:3000/users/login/'
 async function logIn(user, pass) {
     try {
         const response = await fetch(API_URL, {

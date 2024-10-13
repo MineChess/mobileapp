@@ -1,5 +1,5 @@
-//const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/games/'
-const API_URL = 'http://localhost:3000/games/'
+const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/games/'
+//const API_URL = 'http://localhost:3000/games/'
 
 const selectCont = document.querySelector("#gameSelect")
 const newGame = document.querySelector("#newGame")

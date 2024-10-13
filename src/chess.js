@@ -6,8 +6,8 @@ const jwt = localStorage.getItem('jwt')
 const gameId = sessionStorage.getItem('gameId')
 const moves = sessionStorage.getItem('moves')
 
-//let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
-let WS_URL = 'localhost:5000'; // Default URL
+let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
+//let WS_URL = 'localhost:5000'; // Default URL
 
 const socket = new WebSocket(`wss://${WS_URL}?token=${jwt}&gameId=${gameId}`);
 
