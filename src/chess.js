@@ -50,6 +50,9 @@ function handleMessage(messageText) {
     console.log(moves)
     updateBoardBackend(moves)
     updateBoard(data.from, data.to);
+  }else if (data.type === 'reset') {
+    sessionStorage.setItem('moves', '');
+    window.location.reload();
   }
 }
 
@@ -181,3 +184,17 @@ function handleDrop(e) {
     draggedPiece = null;
   }
 }
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  sessionStorage.setItem('moves', '')
+  sessionStorage.removeItem('gameId')
+  window.location.href = 'gameSelect.html';
+});
+
+document.getElementById('refreshBTN').addEventListener('click', () => {
+  const resetMessage = JSON.stringify({ type: 'reset' });
+  socket.send(resetMessage); 
+  sessionStorage.setItem('moves', '');
+  window.location.reload(); 
+});
+

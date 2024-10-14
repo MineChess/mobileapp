@@ -18,6 +18,7 @@ async function logIn(user, pass) {
 
         const responseData = await response.json()
         localStorage.setItem('jwt', responseData.jwt)
+        sessionStorage.setItem('username', responseData.user)
         console.log(responseData) //DEV
         return responseData.jwt
 

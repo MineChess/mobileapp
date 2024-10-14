@@ -56,6 +56,44 @@ async function fetchUsers() {
     }
 }
 
+document.querySelector('#delBtn').addEventListener('click', async () => {
+    const username = sessionStorage.getItem('username');
+
+    // Show a confirmation dialog
+    const isConfirmed = window.confirm('Are you sure you want to delete this user?');
+
+    if (!isConfirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${USERS_API_URL}/${username}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwt}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('End all games before deleting user');
+        }
+
+        console.log('User deleted successfully.');
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.log('Error deleting User:', error);
+        document.querySelector("#error-msg").innerText = error
+    }
+});
+
+document.querySelector('#logOut').addEventListener('click', () => {
+    localStorage.removeItem('jwt')
+    sessionStorage.removeItem('username')
+    window.location.href = 'index.html'
+})
+
 // Display the list of users in the dropdown
 async function displayUsersInDropdown() {
     const users = await fetchUsers();
@@ -181,7 +219,7 @@ async function displayGames() { //GPT genererat hälften
 
                 // Create a delete button
                 const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
+                deleteButton.textContent = 'End';
                 deleteButton.style.marginLeft = '10px';
                 
                 // Add event listener to delete the gameDiv

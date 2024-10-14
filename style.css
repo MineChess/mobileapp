@@ -20,14 +20,14 @@ html, body {
 }
 
 #container {
-  background-color: rgba(255, 255, 255, 0.9); /* Slightly less transparent for better visibility */
+  background-color: rgba(255, 255, 255, 0.9); 
   border: 2px solid #333; 
-  border-radius: 15px; /* Rounded corners */
-  padding: 30px; /* Increased inner padding */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
-  width: 400px; /* Increased width */
+  border-radius: 15px; 
+  padding: 30px; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
   text-align: center; 
 }
+
 
 h1 {
   margin-bottom: 20px; 
@@ -106,4 +106,14 @@ select {
 
 #userDropdown, #newGame, div, p, a {
   font-family: 'Minecraft', sans-serif;
+}
+
+#delBtn {
+  margin: 5px;
+  margin-top: 10px;
+  background-color: red;
+}
+
+#functions{
+  margin-top: 20px;
 }

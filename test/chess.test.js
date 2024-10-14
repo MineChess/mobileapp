@@ -30,6 +30,7 @@ global.WebSocket = jest.fn(() => ({
 document.getElementById = jest.fn().mockReturnValue({
     innerText: '',
     appendChild: jest.fn(),
+    addEventListener: jest.fn(), 
     querySelector: jest.fn().mockReturnValue({
         querySelector: jest.fn(),
         appendChild: jest.fn(),
@@ -41,6 +42,7 @@ document.querySelector = jest.fn().mockReturnValue({
     querySelector: jest.fn(),
     appendChild: jest.fn(),
     innerHTML: '',
+    addEventListener: jest.fn(),  // Adding here as well if needed
 });
 
 // Mocking window.location
