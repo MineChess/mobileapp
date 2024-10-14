@@ -1,57 +1,109 @@
 @font-face {
-    font-family: 'Minecraft';
-    src: url('./font/MinecraftRegular-Bmg3.otf');
+  font-family: 'Minecraft';
+  src: url('./font/MinecraftRegular-Bmg3.otf');
+}
+
+html, body {
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+  font-family: 'Minecraft', sans-serif;
+  background-image: url('./img/background.png'); 
+  background-size: cover; 
+  background-position: center center; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
+#container {
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly less transparent for better visibility */
+  border: 2px solid #333; 
+  border-radius: 15px; /* Rounded corners */
+  padding: 30px; /* Increased inner padding */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+  width: 400px; /* Increased width */
+  text-align: center; 
+}
+
+h1 {
+  margin-bottom: 20px; 
+}
+
+#game-status {
+  margin-bottom: 20px; /* Space below the game status */
 }
 
 #chessboard {
-    display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
-    gap: 0;
-  }
-  
-  #chessboard div {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  #chessboard .white {
-    background-color: #f0d9b5;
-  }
-  
-  #chessboard .black {
-    background-color: #b58863;
-  }
-  
-  #chessboard img {
-    width: 40px;
-    height: 40px;
-    cursor: grab;
-  }
-
-#login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    font-family: Minecraft;
+  display: grid;
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(8, 50px);
+  gap: 0;
+  margin: 0 auto; /* Center the chessboard within the container */
 }
 
-#cont{
-    display: block;
+#chessboard div {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#cont input{
-    margin: 5px;
-    padding:5px;
-    font-family: Minecraft;
+#chessboard .white {
+  background-color: #f0d9b5;
+}
+
+#chessboard .black {
+  background-color: #b58863;
+}
+
+#chessboard img {
+  width: 40px;
+  height: 40px;
+  cursor: grab;
 }
 
 button {
-    margin-top: 10px;
-    padding: 5px;
-    font-family: Minecraft;
+  padding: 10px 15px; 
+  font-family: 'Minecraft', sans-serif;
+  cursor: pointer; 
+  border: none; 
+  background-color: #5cb85c; 
+  color: white; 
+  border-radius: 5px; 
+}
+
+button:hover {
+  background-color: #4cae4c; 
+}
+
+select {
+  padding: 5px; 
+  font-family: 'Minecraft', sans-serif;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  font-family: 'Minecraft', sans-serif;
+}
+
+#cont {
+  display: block;
+}
+
+#cont input {
+  margin: 5px;
+  padding: 5px;
+  font-family: 'Minecraft', sans-serif;
+}
+
+#userDropdown, #newGame, div, p, a {
+  font-family: 'Minecraft', sans-serif;
 }
