@@ -2,12 +2,15 @@ if (!localStorage.getItem('jwt')) {
   window.location.href = 'index.html';
 }
 
+//const API_URL = 'http://localhost:3000/games/'
+const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/games/'
+
 const jwt = localStorage.getItem('jwt');
 const gameId = sessionStorage.getItem('gameId');
-const moves = sessionStorage.getItem('moves');
+let moves = sessionStorage.getItem('moves');
 
 let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
-//let WS_URL = 'localhost:5000'; // Alternative for local testing
+//let WS_URL = 'localhost:5000';
 
 const socket = new WebSocket(`ws://${WS_URL}?token=${jwt}&gameId=${gameId}`);
 
@@ -22,7 +25,7 @@ socket.addEventListener('message', async (event) => {
     if (event.data instanceof Blob) {
       const reader = new FileReader();
       reader.onload = () => {
-        const text = reader.result; 
+        const text = reader.result;
         handleMessage(text);
       };
       reader.readAsText(event.data);
@@ -41,12 +44,46 @@ function handleMessage(messageText) {
   if (data.type === 'info') {
     document.getElementById('game-status').innerText = data.message;
   } else if (data.type === 'move') {
+    if (moves === '') moves += `${data.from} ${data.to}`
+    else moves += `, ${data.from} ${data.to}`
+    sessionStorage.setItem('moves', moves)
+    console.log(moves)
+    updateBoardBackend(moves)
     updateBoard(data.from, data.to);
+  }
+}
+
+async function updateBoardBackend(moves) {
+  try {
+    const response = await fetch(`${API_URL}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`
+      },
+      body: JSON.stringify({
+        id: gameId,
+        moves: moves
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Error updating game');
+    }
+
+  } catch (error) {
+    console.log('Error updating game:', error);
   }
 }
 
 function sendMove(fromIndex, toIndex) {
   const message = JSON.stringify({ type: 'move', from: fromIndex, to: toIndex });
+  if (moves === '') moves += `${fromIndex} ${toIndex}`
+  else moves += `, ${fromIndex} ${toIndex}`
+  sessionStorage.setItem('moves', moves)
+  console.log(moves)
+  updateBoardBackend(moves)
+
   socket.send(message);
   console.log('Sent move:', message);
 }
@@ -79,18 +116,19 @@ function extractMoves(movesString) {
 
   // Map each move pair to an object with from and to indices
   const extractedMoves = movePairs.map(move => {
-      const [fromIndex, toIndex] = move.split(' ').map(Number); // Convert indices to numbers
-      return { fromIndex, toIndex };
+    const [fromIndex, toIndex] = move.split(' ').map(Number); // Convert indices to numbers
+    return { fromIndex, toIndex };
   });
 
   return extractedMoves;
 }
 
 
-if(moves) {
+if (moves) {
   const extractedMoves = extractMoves(moves);
   extractedMoves.forEach(move => {
     initialBoardSetup[move.toIndex] = initialBoardSetup[move.fromIndex]
+    if (move.toIndex == move.fromIndex) return
     initialBoardSetup[move.fromIndex] = ''
   });
 }

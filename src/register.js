@@ -1,6 +1,6 @@
 let PROD_URL
 const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/'
-//const API_URL = 'http://localhost:5000/users/'
+//const API_URL = 'http://localhost:3000/users/'
 
 async function registerUser(user, pass) {
     try {

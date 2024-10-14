@@ -91,9 +91,7 @@ function decodeJWT(token) { //CO-pilot generated
 }
 
 async function createNewGame(opponentId) {
-    try {
-        const jwt = localStorage.getItem('jwt'); // Get JWT from localStorage
-        
+    try {        
         if (!jwt) {
             throw new Error('User not authenticated');
         }
@@ -120,16 +118,39 @@ async function createNewGame(opponentId) {
 
         const game = await response.json();
         console.log('Game created:', game);
+        sessionStorage.setItem('moves', '')
+        sessionStorage.setItem('gameId', game.game.id)
         window.location.href = 'chess.html'; // Redirect to the chess game page
     } catch (error) {
         console.error('Error creating game:', error);
     }
 }
 
-// Handle the "New Game" button click
 newGame.addEventListener('click', () => {
     displayUsersInDropdown(); // Display the dropdown
 });
+
+async function deleteGame(gameId) {
+    try {
+        const response = await fetch(`${API_URL}/${gameId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwt}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error deleting game');
+        }
+
+        // Optionally, handle the response if needed
+        console.log('Game deleted successfully.');
+
+    } catch (error) {
+        console.log('Error deleting game:', error);
+    }
+}
 
 async function displayGames() { //GPT genererat hälften
     try {
@@ -144,7 +165,8 @@ async function displayGames() { //GPT genererat hälften
                 const gameDiv = document.createElement('div')
                 gameDiv.setAttribute('data-game-id', game.id)
                 gameDiv.setAttribute('data-game-moves', game.moves)
-                gameDiv.textContent = `Game ID: ${game.id} - Moves: ${game.moves} moves`
+                gameDiv.textContent = `Game ID: ${game.id}`
+                gameDiv.style.margin = '5px'
 
                 // Makes div clickable
                 gameDiv.style.cursor = 'pointer';
@@ -156,6 +178,21 @@ async function displayGames() { //GPT genererat hälften
                     // Redirect to chess.html
                     window.location.href = 'chess.html'
                 });
+
+                // Create a delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.style.marginLeft = '10px';
+                
+                // Add event listener to delete the gameDiv
+                deleteButton.addEventListener('click', async (event) => {
+                    event.stopPropagation(); 
+                    await deleteGame(game.id)
+                    gameDiv.remove(); 
+                });
+
+                 // Append the delete button to the game div
+                 gameDiv.appendChild(deleteButton);
 
                 // Append the div to the container
                 selectCont.appendChild(gameDiv) // Assuming selectCont is your container element
