@@ -12,7 +12,7 @@ let moves = sessionStorage.getItem('moves');
 let WS_URL = 'minechesswebsocket-abh7eycbhsexazg6.northeurope-01.azurewebsites.net'; // Default URL
 //let WS_URL = 'localhost:5000';
 
-const socket = new WebSocket(`ws://${WS_URL}?token=${jwt}&gameId=${gameId}`);
+const socket = new WebSocket(`wss://${WS_URL}?token=${jwt}&gameId=${gameId}`);
 
 socket.addEventListener('open', () => {
   console.log('Connected to WebSocket server');
