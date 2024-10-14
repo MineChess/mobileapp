@@ -1,8 +1,11 @@
 const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/games/'
+const USERS_API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/'
 //const API_URL = 'http://localhost:3000/games/'
+//const USERS_API_URL = 'http://localhost:3000/users/'
 
 const selectCont = document.querySelector("#gameSelect")
 const newGame = document.querySelector("#newGame")
+const userDropdown = document.querySelector("#userDropdown")
 const jwt = localStorage.getItem('jwt')
 
 if (!localStorage.getItem('jwt')) {
@@ -31,6 +34,102 @@ async function fetchGames(){
         console.error('Error fetching games:', error);
     }
 }
+
+async function fetchUsers() {
+    try {
+        const response = await fetch(`${USERS_API_URL}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwt}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching users');
+        }
+
+        const users = await response.json();
+        return users;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+}
+
+// Display the list of users in the dropdown
+async function displayUsersInDropdown() {
+    const users = await fetchUsers();
+    if (users && users.length > 0) {
+        userDropdown.style.display = 'block'; // Show the dropdown
+        userDropdown.innerHTML = '<option value="">Select an opponent</option>'; // Default option
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.username;
+            userDropdown.appendChild(option);
+        });
+
+        // Add event listener to the dropdown to handle game creation
+        userDropdown.addEventListener('change', async function() {
+            const selectedUserId = userDropdown.value;
+            if (selectedUserId) {
+                await createNewGame(selectedUserId);
+            }
+        });
+    }
+}
+
+function decodeJWT(token) { //CO-pilot generated
+    // Split the JWT into its parts
+    const base64Url = token.split('.')[1]; // Extract the payload (second part of JWT)
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Fix URL-safe characters
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload); // Parse and return payload as an object
+}
+
+async function createNewGame(opponentId) {
+    try {
+        const jwt = localStorage.getItem('jwt'); // Get JWT from localStorage
+        
+        if (!jwt) {
+            throw new Error('User not authenticated');
+        }
+
+        const decodedToken = decodeJWT(jwt); // Decode the JWT to get user info
+        const player1Id = decodedToken.sub;  
+
+        const response = await fetch(`${API_URL}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwt}`
+            },
+            body: JSON.stringify({
+                player1Id: player1Id,  // Use the userId extracted from the JWT
+                player2Id: opponentId,
+                moves: '' // New game starts with no moves
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error creating new game');
+        }
+
+        const game = await response.json();
+        console.log('Game created:', game);
+        window.location.href = 'chess.html'; // Redirect to the chess game page
+    } catch (error) {
+        console.error('Error creating game:', error);
+    }
+}
+
+// Handle the "New Game" button click
+newGame.addEventListener('click', () => {
+    displayUsersInDropdown(); // Display the dropdown
+});
 
 async function displayGames() { //GPT genererat hälften
     try {
