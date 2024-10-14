@@ -2,7 +2,7 @@ const API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurew
 const USERS_API_URL = 'https://minechessbackend-hrbxbze7gbfdhxay.northeurope-01.azurewebsites.net/users/'
 //const API_URL = 'http://localhost:3000/games/'
 //const USERS_API_URL = 'http://localhost:3000/users/'
-
+//
 const selectCont = document.querySelector("#gameSelect")
 const newGame = document.querySelector("#newGame")
 const userDropdown = document.querySelector("#userDropdown")
