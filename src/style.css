@@ -117,3 +117,50 @@ select {
 #functions{
   margin-top: 20px;
 }
+
+@media (max-width: 800px) {
+  #container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  #chessboard {
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 40px);
+  }
+
+  #chessboard div {
+    width: 40px;
+    height: 40px;
+  }
+
+  #chessboard img {
+    width: 30px;
+    height: 30px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+
+  #game-status {
+    font-size: 0.9em;
+  }
+}
+
+.selected {
+  background-color: yellow !important;
+}
+
+.from-square {
+  background-color: lightblue !important;
+}
+
+.to-square {
+  background-color: lightgreen !important;
+}

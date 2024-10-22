@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chess Game register</title>
+    <title>WebSocket Chess Game Login</title>
     <link rel="stylesheet" href="style.css">
     </style>
 </head>
@@ -12,17 +12,18 @@
 <body>
     <div id="container">
         <div id="login-form">
-            <h2>Register to Chess Game</h2>
+            <h2>Login to Chess Game</h2>
             <div id="cont">
                 <input id="user-input" type="text" placeholder="Enter username" required>
                 <input id="pass-input" type="password" placeholder="Enter password" required>
             </div>
-            <button id="register-btn">Register</button>
+            <button id="login-btn">Login</button>
             <p class="error" id="error-msg"></p>
+            <a href="register.html">No account? Register here!</a>
         </div>
     </div>
 
-    <script src="./src/register.js"></script>
+    <script src="./login.js"></script>
 </body>
 
 </html>

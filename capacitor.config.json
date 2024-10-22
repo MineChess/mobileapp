@@ -1,0 +1,10 @@
+{
+  "appId": "com.wom.minechess",
+  "appName": "MineChess",
+  "webDir": "src",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
+}

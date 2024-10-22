@@ -44,13 +44,18 @@ function handleMessage(messageText) {
   if (data.type === 'info') {
     document.getElementById('game-status').innerText = data.message;
   } else if (data.type === 'move') {
-    if (moves === '') moves += `${data.from} ${data.to}`
-    else moves += `, ${data.from} ${data.to}`
-    sessionStorage.setItem('moves', moves)
-    console.log(moves)
-    updateBoardBackend(moves)
+    if (moves === '') moves += `${data.from} ${data.to}`;
+    else moves += `, ${data.from} ${data.to}`;
+    sessionStorage.setItem('moves', moves);
+    console.log(moves);
+    updateBoardBackend(moves);
+    clearLastMoveColors();
+    lastMove = { fromIndex: data.from, toIndex: data.to };
+    highlightLastMoveColors();
+
+    // Update board with the new move
     updateBoard(data.from, data.to);
-  }else if (data.type === 'reset') {
+  } else if (data.type === 'reset') {
     sessionStorage.setItem('moves', '');
     window.location.reload();
   }
@@ -151,50 +156,86 @@ const pieceImages = {
   'P': 'img/white/pig_white.png'
 };
 
+let selectedSquare = null;
+let lastMove = { fromIndex: null, toIndex: null };
+
+function handleSquareClick(e) {
+  const square = e.currentTarget;
+  const index = parseInt(square.dataset.index);
+
+  if (selectedSquare) {
+    // If a square is already selected, attempt to move the piece
+    const fromIndex = parseInt(selectedSquare.dataset.index);
+    const toIndex = index;
+
+    if (fromIndex !== toIndex) {
+      // Clear last move colors
+      clearLastMoveColors();
+
+      // Perform move
+      sendMove(fromIndex, toIndex);
+      updateBoard(fromIndex, toIndex);
+
+      // Update last move
+      lastMove = { fromIndex, toIndex };
+      highlightLastMoveColors();
+    }
+
+    // Deselect the square after moving
+    selectedSquare.classList.remove('selected');
+    selectedSquare = null;
+  } else {
+    // Otherwise, select the square if it contains a piece
+    const piece = square.querySelector('img');
+    if (piece) {
+      selectedSquare = square;
+      selectedSquare.classList.add('selected');
+    }
+  }
+}
+
+function clearLastMoveColors() {
+  if (lastMove.fromIndex !== null) {
+    document.querySelector(`[data-index='${lastMove.fromIndex}']`).classList.remove('from-square');
+  }
+  if (lastMove.toIndex !== null) {
+    document.querySelector(`[data-index='${lastMove.toIndex}']`).classList.remove('to-square');
+  }
+}
+
+function highlightLastMoveColors() {
+  if (lastMove.fromIndex !== null) {
+    document.querySelector(`[data-index='${lastMove.fromIndex}']`).classList.add('from-square');
+  }
+  if (lastMove.toIndex !== null) {
+    document.querySelector(`[data-index='${lastMove.toIndex}']`).classList.add('to-square');
+  }
+}
+
 const chessboard = document.getElementById('chessboard');
 for (let i = 0; i < 64; i++) {
   const square = document.createElement('div');
   square.className = (Math.floor(i / 8) + i) % 2 === 0 ? 'white' : 'black';
   square.dataset.index = i;
-  square.addEventListener('dragover', (e) => e.preventDefault());
-  square.addEventListener('drop', handleDrop);
+  square.addEventListener('click', handleSquareClick);
   if (initialBoardSetup[i]) {
     const piece = document.createElement('img');
     piece.src = pieceImages[initialBoardSetup[i]];
-    piece.draggable = true;
     piece.dataset.index = i;
-    piece.addEventListener('dragstart', handleDragStart);
     square.appendChild(piece);
   }
   chessboard.appendChild(square);
 }
 
-let draggedPiece = null;
-
-function handleDragStart(e) {
-  draggedPiece = e.target;
-}
-
-function handleDrop(e) {
-  if (draggedPiece) {
-    const fromIndex = parseInt(draggedPiece.dataset.index);
-    const toIndex = parseInt(e.target.dataset.index || e.target.parentElement.dataset.index);
-    sendMove(fromIndex, toIndex);
-    updateBoard(fromIndex, toIndex);
-    draggedPiece = null;
-  }
-}
-
 document.getElementById('backBtn').addEventListener('click', () => {
-  sessionStorage.setItem('moves', '')
-  sessionStorage.removeItem('gameId')
+  sessionStorage.setItem('moves', '');
+  sessionStorage.removeItem('gameId');
   window.location.href = 'gameSelect.html';
 });
 
 document.getElementById('refreshBTN').addEventListener('click', () => {
   const resetMessage = JSON.stringify({ type: 'reset' });
-  socket.send(resetMessage); 
+  socket.send(resetMessage);
   sessionStorage.setItem('moves', '');
-  window.location.reload(); 
+  window.location.reload();
 });
-
